@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 require "simple_json_log_formatter/version"
-require "logger"
 require "json"
 
 class SimpleJsonLogFormatter
@@ -10,6 +9,7 @@ class SimpleJsonLogFormatter
   # @param [Hash] opts
   # @option opts [String] time_key (default: time)
   # @option opts [String] severity_key (default: severity)
+  # @option opts [String] progname_key (default: progname)
   # @option opts [String] message_key (default: message)
   # @option opts [String] datetime_format (default: nil)
   def initialize(opts={})
