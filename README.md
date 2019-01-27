@@ -1,5 +1,9 @@
 # SimpleJsonLogFormatter
 
+Json formatter for Ruby logger.
+
+This project is based on [LtsvLogFormatter](https://github.com/sonots/ltsv_log_formatter) and modified for json.
+
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -18,7 +22,40 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+```ruby
+require 'logger'
+require 'simple_json_log_formatter'
+logger = Logger.new
+logger.formatter = SimpleJsonLogFormatter.new
+```
+
+### Rails
+
+Configure at `config/application.rb` or `config/environments/*.rb`
+
+```ruby
+# config/application.rb
+# OR
+# config/environments/*.rb
+config.log_formatter = SimpleJsonLogFormatter.new
+```
+
+### Options
+
+- time_key
+    - Change the key name of the time field. Set nil to remove. Default: time
+- severity_key
+    - Change the key name of the severity field. Set nil to remove. Default: severity
+- progname_key
+    - Change the key name of the progname field. Set nil to remove. Default: progname
+- message_key
+    - Change the key name for the message field. Default: message
+- datetime_format
+    - Change date and time format of the time field. Default: `%FT%T%:z`
+
+```ruby
+logger.formatter = SimpleJsonLogFormatter.new(time_key: "log_time", progname_key: nil)
+```
 
 ## Development
 
