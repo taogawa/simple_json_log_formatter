@@ -23,30 +23,30 @@ class SimpleJsonLogFormatter
 
   def call(severity, time, progname, msg)
     log = {}
-    log.merge!(format_time(time)) if @opts[:time_key]
-    log.merge!(format_severity(severity)) if @opts[:severity_key]
-    log.merge!(format_progname(progname)) if @opts[:progname_key]
-    log.merge!(format_message(msg))
+    store_time(log, time)
+    store_severity(log, severity)
+    store_progname(log, progname)
+    store_message(log, msg)
     "#{log.to_json}\n"
   end
 
   private
-    def format_time(time)
-      { @opts[:time_key] => time.strftime(@opts[:datetime_format]) }
+    def store_time(log, time)
+      log[@opts[:time_key]] = time.strftime(@opts[:datetime_format]) if @opts[:time_key]
     end
 
-    def format_severity(severity)
-      { @opts[:severity_key] => severity }
+    def store_severity(log, severity)
+      log[@opts[:severity_key]] = severity if @opts[:severity_key]
     end
 
-    def format_progname(progname)
-      { @opts[:progname_key] => progname }
+    def store_progname(log, progname)
+      log[@opts[:progname_key]] = progname if @opts[:progname_key]
     end
 
-    def format_message(msg)
+    def store_message(log, msg)
       if msg.is_a?(String) && msg.start_with?("{") && msg.end_with?("}")
         msg = (JSON.parse(msg) rescue nil) || msg
       end
-      { @opts[:message_key] => msg }
+      log[@opts[:message_key]] = msg
     end
 end
