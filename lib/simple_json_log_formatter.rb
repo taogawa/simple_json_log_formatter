@@ -22,31 +22,19 @@ class SimpleJsonLogFormatter
   end
 
   def call(severity, time, progname, msg)
-    log = {}
-    store_time(log, time)
-    store_severity(log, severity)
-    store_progname(log, progname)
-    store_message(log, msg)
-    "#{log.to_json}\n"
+    event = {}
+    event[@opts[:time_key]] = time.strftime(@opts[:datetime_format]) if @opts[:time_key]
+    event[@opts[:severity_key]] = severity if @opts[:severity_key]
+    event[@opts[:progname_key]] = progname if @opts[:progname_key]
+    event[@opts[:message_key]] = format_message(msg)
+    "#{event.to_json}\n"
   end
 
   private
-    def store_time(log, time)
-      log[@opts[:time_key]] = time.strftime(@opts[:datetime_format]) if @opts[:time_key]
-    end
-
-    def store_severity(log, severity)
-      log[@opts[:severity_key]] = severity if @opts[:severity_key]
-    end
-
-    def store_progname(log, progname)
-      log[@opts[:progname_key]] = progname if @opts[:progname_key]
-    end
-
-    def store_message(log, msg)
+    def format_message(msg)
       if msg.is_a?(String) && msg.start_with?("{") && msg.end_with?("}")
         msg = (JSON.parse(msg) rescue nil) || msg
       end
-      log[@opts[:message_key]] = msg
+      msg
     end
 end
