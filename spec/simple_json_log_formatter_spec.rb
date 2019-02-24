@@ -111,6 +111,16 @@ RSpec.describe SimpleJsonLogFormatter do
         expect(json.key?('message')).to be true
       end
     end
+
+    context 'with opts datetime_format nil' do
+      let(:opts) { { datetime_format: nil } }
+
+      it 'uses iso8601 format' do
+        logger.info('test')
+        json = JSON.parse(gets)
+        expect(json['time']).to match(/\d{4}-\d{2}-\d{2}T\d{2}\:\d{2}\:\d{2}[+-]\d{2}\:\d{2}/)
+      end
+    end
   end
 
   describe '#call' do

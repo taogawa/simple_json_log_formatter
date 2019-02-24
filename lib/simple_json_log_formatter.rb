@@ -4,21 +4,21 @@ require "json"
 
 class SimpleJsonLogFormatter
 
-  attr_accessor :opts
+  attr_reader :opts
 
   # @param [Hash] opts
   # @option opts [String] time_key (default: time)
   # @option opts [String] severity_key (default: severity)
   # @option opts [String] progname_key (default: progname)
   # @option opts [String] message_key (default: message)
-  # @option opts [String] datetime_format (default: nil)
+  # @option opts [String] datetime_format (default: %FT%T%:z)
   def initialize(opts={})
     @opts = opts.map {|k, v| [k.to_sym, v] }.to_h
     @opts[:time_key] = :time unless @opts.has_key?(:time_key)
     @opts[:severity_key] = :severity unless @opts.has_key?(:severity_key)
     @opts[:progname_key] = :progname unless @opts.has_key?(:progname_key)
     @opts[:message_key] ||= :message
-    @opts[:datetime_format] = "%FT%T%:z" unless @opts.has_key?(:datetime_format)
+    @opts[:datetime_format] = "%FT%T%:z" if !@opts.has_key?(:datetime_format) || @opts[:datetime_format].nil?
   end
 
   def call(severity, time, progname, msg)
