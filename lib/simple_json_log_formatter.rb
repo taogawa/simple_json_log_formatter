@@ -32,9 +32,22 @@ class SimpleJsonLogFormatter
 
   private
     def format_message(msg)
-      if msg.is_a?(String) && msg.start_with?("{") && msg.end_with?("}")
-        msg = (JSON.parse(msg) rescue nil) || msg
+      case msg
+      when String
+        if msg.start_with?("{") && msg.end_with?("}")
+          (JSON.parse(msg) rescue nil) || msg
+        else
+          msg
+        end
+      when Hash
+        msg
+      when Exception
+        exception = {}
+        exception["message"] = msg.message
+        exception["backtrace"] = msg.backtrace if msg.backtrace
+        exception
+      else
+        msg.inspect
       end
-      msg
     end
 end

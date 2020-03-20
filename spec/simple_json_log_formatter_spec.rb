@@ -165,6 +165,37 @@ RSpec.describe SimpleJsonLogFormatter do
           expect(json['message']).to eq('foo' => 'bar')
         end
       end
+
+      context 'when exception param' do
+        it 'outputs json hash' do
+          logger.info(StandardError.new("foo"))
+          json = JSON.parse(gets)
+          expect(json['message']).to eq('message' => 'foo')
+        end
+
+        context 'line feed log' do
+          it 'outputs line feed' do
+            logger.info(StandardError.new("foo\nbar"))
+            json = JSON.parse(gets)
+            expect(json['message']).to eq('message' => "foo\nbar")
+          end
+        end
+      end
+
+      context 'when other object param' do
+        class Foo
+          attr_accessor :bar
+          def initialize(bar)
+            @bar = bar
+          end
+        end
+
+        it 'outputs json hash' do
+          logger.info(Foo.new("bar"))
+          json = JSON.parse(gets)
+          expect(json['message']).to match(/^#<Foo:.*@bar=\"bar\">$/)
+        end
+      end
     end
 
     context 'with opts message_key' do
