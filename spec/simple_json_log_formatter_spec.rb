@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 require 'logger'
 require 'timecop'
+require 'fileutils'
 
 RSpec.describe SimpleJsonLogFormatter do
   let(:logger) do
