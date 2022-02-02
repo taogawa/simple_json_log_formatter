@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        ruby: [ '2.5.9', '2.6.9', '2.7.5', '3.0.3' ]
+        ruby: [ 2.6, 2.7, 3.0, 3.1 ]
 
     steps:
     - uses: actions/checkout@v2
@@ -22,5 +22,3 @@ jobs:
         bundle install --jobs 4 --retry 3
     - name: Run test
       run: bundle exec rake spec
-
-
